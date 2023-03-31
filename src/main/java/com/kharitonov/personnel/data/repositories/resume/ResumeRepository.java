@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ResumeRepository extends CrudRepository<ResumeEntity, Long> {
-    List<ResumeEntity> findAll();
+    List<ResumeEntity> findAllByCandidateEntity_Id(Long id);
 }

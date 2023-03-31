@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface CandidateRepository extends CrudRepository<CandidateEntity, Long> {
-
-    List<CandidateEntity> findAll();
 }

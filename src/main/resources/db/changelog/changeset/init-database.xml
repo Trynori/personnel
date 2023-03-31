@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+            http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+            http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet id="1" author="Kharitonov">
+        <createTable tableName="candidate">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profession" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="education" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthday" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="resume">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path_dropbox" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidate_id" type="bigint">
+                <constraints foreignKeyName="candidate_resume_fk" referencedTableName="candidate" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

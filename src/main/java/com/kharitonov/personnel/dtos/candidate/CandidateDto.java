@@ -16,6 +16,8 @@ public class CandidateDto {
     private String name;
     private String surname;
     private String patronymic;
+    private String profession;
+    private String education;
     private LocalDate birthday;
     private String email;
 

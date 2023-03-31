@@ -23,6 +23,8 @@ public class CandidateEntity {
     private String name;
     private String surname;
     private String patronymic;
+    private String profession;
+    private String education;
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate birthday;
     private String email;

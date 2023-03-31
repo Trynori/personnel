@@ -1,9 +1,11 @@
-package com.kharitonov.personnel.web.services.candidate;
+package com.kharitonov.personnel.services.candidate;
 
 import com.kharitonov.personnel.data.models.candidate.CandidateEntity;
 import com.kharitonov.personnel.data.repositories.candidate.CandidateRepository;
 import com.kharitonov.personnel.dtos.candidate.CandidateDto;
 import com.kharitonov.personnel.dtos.candidate.CandidateMapper;
+import com.kharitonov.personnel.exceptions.BadRequestException;
+import com.kharitonov.personnel.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,30 +25,31 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public List<CandidateDto> findAll() {
-        return candidateMapper.toDto(candidateRepository.findAll());
+    public Iterable<CandidateDto> findAll() {
+        return candidateMapper.toIterableDto(candidateRepository.findAll());
     }
 
     @Override
     public CandidateDto findById(Long id) {
-        if (id == null) {
-            return null;
+        CandidateEntity candidateEntity = candidateRepository.findById(id).orElse(new CandidateEntity());
+        if(candidateEntity.getId() == null) {
+            throw new NotFoundException("Candidate was not found by id:" + id);
         }
-
-        return candidateMapper.toDto(candidateRepository.findById(id).get());
-    }
-
-    @Override
-    public CandidateDto save(CandidateEntity candidateEntity) {
-        if (candidateEntity == null) {
-            return null;
-        }
-        candidateRepository.save(candidateEntity);
         return candidateMapper.toDto(candidateEntity);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public CandidateDto save(CandidateDto candidateDto) {
+        if (candidateDto == null) {
+            throw new BadRequestException("User was empty");
+        }
+        CandidateEntity candidateEntity = candidateMapper.toEntity(candidateDto);
+        return candidateMapper.toDto(candidateRepository.save(candidateEntity));
+    }
+
+    @Override
+    public Long deleteById(Long id) {
         candidateRepository.deleteById(id);
+        return id;
     }
 }
