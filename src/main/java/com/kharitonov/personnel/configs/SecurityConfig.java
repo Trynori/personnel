@@ -1,6 +1,7 @@
 package com.kharitonov.personnel.configs;
 
 import com.kharitonov.personnel.utils.filter.JwtAuthenticationFilter;
+import com.kharitonov.personnel.web.contracts.router.ApiRouter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("")
+                .requestMatchers(ApiRouter.AuthenticationController.BASE_URL + "/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

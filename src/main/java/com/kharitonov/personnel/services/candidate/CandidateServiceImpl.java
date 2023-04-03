@@ -41,7 +41,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public CandidateDto save(CandidateDto candidateDto) {
         if (candidateDto == null) {
-            throw new BadRequestException("User was empty");
+            throw new BadRequestException("Candidate was empty");
         }
         CandidateEntity candidateEntity = candidateMapper.toEntity(candidateDto);
         return candidateMapper.toDto(candidateRepository.save(candidateEntity));

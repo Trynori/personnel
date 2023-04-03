@@ -1,6 +1,5 @@
 package com.kharitonov.personnel.web.contracts.request;
 
-import com.kharitonov.personnel.data.models.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
