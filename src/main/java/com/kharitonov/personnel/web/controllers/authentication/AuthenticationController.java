@@ -1,4 +1,4 @@
-package com.kharitonov.personnel.web.controllers.Authentication;
+package com.kharitonov.personnel.web.controllers.authentication;
 
 import com.kharitonov.personnel.services.authentication.AuthenticationService;
 import com.kharitonov.personnel.web.contracts.router.ApiRouter;

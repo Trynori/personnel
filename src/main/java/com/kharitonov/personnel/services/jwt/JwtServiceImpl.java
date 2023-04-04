@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-@Transactional(value = Transactional.TxType.REQUIRED)
 public class JwtServiceImpl implements JwtService{
 
     private final String SECRET_KEY = System.getenv("SECRET_KEY");
@@ -31,29 +30,29 @@ public class JwtServiceImpl implements JwtService{
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-
-    @Override
-    public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJwt(token)
-                .getBody();
-    }
-
-    private Key getSigningKey() {
+    private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
-                .addClaims(extraClaims)
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

@@ -1,6 +1,5 @@
 package com.kharitonov.personnel.services.UserDetails;
 
-import com.kharitonov.personnel.data.models.candidate.CandidateEntity;
 import com.kharitonov.personnel.data.models.user.UserEntity;
 import com.kharitonov.personnel.data.repositories.user.UserRepository;
 import com.kharitonov.personnel.dtos.user.UserDto;
@@ -8,30 +7,19 @@ import com.kharitonov.personnel.dtos.user.UserMapper;
 import com.kharitonov.personnel.exceptions.BadRequestException;
 import com.kharitonov.personnel.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
 
     @Override
     public UserDto save(UserEntity userEntity) {

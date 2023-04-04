@@ -15,12 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class ResumeController {
 
    private final ResumeService resumeService;
-   private final ResumeRepository resumeRepository;
+
 
    @Autowired
-    public ResumeController(ResumeService resumeService, ResumeRepository resumeRepository) {
+    public ResumeController(ResumeService resumeService) {
         this.resumeService = resumeService;
-       this.resumeRepository = resumeRepository;
    }
 
    @GetMapping(ApiRouter.ResumeController.FETCH_BY_ID)

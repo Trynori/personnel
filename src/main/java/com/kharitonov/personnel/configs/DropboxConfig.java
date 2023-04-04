@@ -11,7 +11,6 @@ public class DropboxConfig {
     @Bean
     public DbxClientV2 dbxClientV2() {
         DbxRequestConfig dbxRequestConfig = DbxRequestConfig.newBuilder("personnel/1.0").build();
-        DbxClientV2 dbxClientV2 = new DbxClientV2(dbxRequestConfig, System.getenv("DROPBOX_TOKEN"));
-        return dbxClientV2;
+        return new DbxClientV2(dbxRequestConfig, System.getenv("DROPBOX_TOKEN"));
     }
 }

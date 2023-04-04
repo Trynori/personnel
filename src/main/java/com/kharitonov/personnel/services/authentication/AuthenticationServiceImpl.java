@@ -2,8 +2,7 @@ package com.kharitonov.personnel.services.authentication;
 
 import com.kharitonov.personnel.data.models.user.Role;
 import com.kharitonov.personnel.data.models.user.UserEntity;
-import com.kharitonov.personnel.services.UserDetails.UserDetailsServiceImpl;
-import com.kharitonov.personnel.services.UserDetails.UserService;
+import com.kharitonov.personnel.services.UserDetails.UserServiceImpl;
 import com.kharitonov.personnel.services.jwt.JwtService;
 import com.kharitonov.personnel.web.contracts.request.AuthenticationRequest;
 import com.kharitonov.personnel.web.contracts.request.RegisterRequest;
@@ -17,15 +16,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService{
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationServiceImpl(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.userDetailsServiceImpl = userDetailsService;
+    public AuthenticationServiceImpl(UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -40,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.User)
                 .build();
-        userDetailsServiceImpl.save(user);
+        userService.save(user);
         String generateToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(generateToken)
@@ -54,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                         request.getEmail(), request.getPassword()
                 )
         );
-        UserEntity user = userDetailsServiceImpl.findByEmail(request.getEmail());
+        UserEntity user = userService.findByEmail(request.getEmail());
         String generateToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(generateToken)
