@@ -46,7 +46,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="candidate_id" type="bigint">
-                <constraints foreignKeyName="candidate_resume_fk" referencedTableName="candidate" referencedColumnNames="id"/>
+                <constraints foreignKeyName="candidate_resume_fk" referencedTableName="candidate" referencedColumnNames="id" nullable="false"/>
             </column>
         </createTable>
     </changeSet>
