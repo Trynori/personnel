@@ -1,6 +1,7 @@
 package com.kharitonov.personnel.data.models.user;
 
 
+import com.kharitonov.personnel.data.models.token.TokenEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,9 @@ public class UserEntity implements UserDetails {
     private Role role;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<TokenEntity> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

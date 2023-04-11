@@ -24,8 +24,13 @@ public class QueryController {
     }
 
     @GetMapping(ApiRouter.QueryController.FETCH_ALL_FOR_USER)
-    public ResponseEntity<Iterable<QueryDto>> FetchAllById(@PathVariable("id") Long id) {
+    public ResponseEntity<Iterable<QueryDto>> fetchAllById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(queryService.findAllByUserEntityId(id));
+    }
+
+    @GetMapping(ApiRouter.QueryController.FETCH_BY_ID)
+    public ResponseEntity<QueryDto> fetchById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(queryService.findById(id));
     }
 
     @PostMapping

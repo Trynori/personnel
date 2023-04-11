@@ -1,9 +1,12 @@
 package com.kharitonov.personnel.web.contracts.router;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class ApiRouter {
 
     public static class CandidateRouter {
-        public static final String BASE_URL = "api/v1/candidates";
+        public static final String BASE_URL = "api/v1/candidate";
         public static final String FETCH_BY_ID = "/{id}";
         public static final String DELETE_BY_ID = "/{id}";
     }
