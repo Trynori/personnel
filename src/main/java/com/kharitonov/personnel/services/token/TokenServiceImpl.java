@@ -7,6 +7,7 @@ import com.kharitonov.personnel.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TokenServiceImpl implements TokenService{
@@ -17,7 +18,7 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public Iterable<TokenEntity> findAllValidTokenByUserId(Long userId) {
+    public List<TokenEntity> findAllValidTokenByUserId(Long userId) {
         List<TokenEntity> allValidTokenByUserId = tokenRepository.findAllValidTokenByUserId(userId);
         if(allValidTokenByUserId.isEmpty()) {
             throw new NotFoundException("Valid token was not found by userId:" + userId);
@@ -26,11 +27,16 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public TokenEntity findByToken(String token) {
+    public Iterable<TokenEntity> saveAll(Iterable<TokenEntity> tokenEntities) {
+        return tokenRepository.saveAll(tokenEntities);
+    }
+
+    @Override
+    public Optional<TokenEntity> findByToken(String token) {
         if (token.isEmpty()) {
             throw new BadRequestException("Token was empty");
         }
-        return tokenRepository.findByToken(token).get();
+        return tokenRepository.findByToken(token);
     }
 
     @Override

@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -66,9 +68,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserEntity userEntity = userService.findByEmail(request.getEmail());
         String generateToken = jwtService.generateToken(userEntity);
         saveUserToken(userEntity, generateToken);
+        revokeAllUserTokens(userEntity);
         return AuthenticationResponse.builder()
                 .token(generateToken)
                 .build();
+    }
+
+    private void revokeAllUserTokens(UserEntity userEntity) {
+        List<TokenEntity> allValidTokenByUserId = tokenService.findAllValidTokenByUserId(userEntity.getId());
+        if (allValidTokenByUserId.isEmpty()) {
+            return;
+        }
+        allValidTokenByUserId.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenService.saveAll(allValidTokenByUserId);
+
     }
 
     private void saveUserToken(UserEntity userEntity, String token) {
