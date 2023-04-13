@@ -1,9 +1,9 @@
 package com.kharitonov.personnel.services.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kharitonov.personnel.data.models.token.TokenEntity;
 import com.kharitonov.personnel.data.models.user.Role;
 import com.kharitonov.personnel.data.models.user.UserEntity;
-import com.kharitonov.personnel.data.repositories.token.TokenRepository;
 import com.kharitonov.personnel.dtos.user.UserMapper;
 import com.kharitonov.personnel.services.UserDetails.UserServiceImpl;
 import com.kharitonov.personnel.services.jwt.JwtService;
@@ -11,12 +11,19 @@ import com.kharitonov.personnel.services.token.TokenService;
 import com.kharitonov.personnel.web.contracts.request.AuthenticationRequest;
 import com.kharitonov.personnel.web.contracts.request.RegisterRequest;
 import com.kharitonov.personnel.web.contracts.response.AuthenticationResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -52,9 +59,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         UserEntity userEntity = userMapper.toEntity(userService.save(user));
         String generateToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(userEntity);
         saveUserToken(userEntity, generateToken);
         return AuthenticationResponse.builder()
-                .token(generateToken)
+                .accessToken(generateToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -67,11 +76,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
         UserEntity userEntity = userService.findByEmail(request.getEmail());
         String generateToken = jwtService.generateToken(userEntity);
-        saveUserToken(userEntity, generateToken);
+        String refreshToken = jwtService.generateRefreshToken(userEntity);
         revokeAllUserTokens(userEntity);
+        saveUserToken(userEntity, generateToken);
         return AuthenticationResponse.builder()
-                .token(generateToken)
+                .accessToken(generateToken)
+                .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return;
+        }
+        refreshToken = authorization.substring(7);
+        userEmail = jwtService.extractUsername(refreshToken);
+        if (userEmail != null) {
+            UserEntity userDetails = userService.findByEmail(userEmail);
+            if (jwtService.isTokenValid(refreshToken, userDetails)) {
+                String accessToken = jwtService.generateToken(userDetails);
+                revokeAllUserTokens(userDetails);
+                saveUserToken(userDetails, accessToken);
+                AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
+            }
+        }
     }
 
     private void revokeAllUserTokens(UserEntity userEntity) {
