@@ -27,7 +27,6 @@ public class ApiRouter {
     public static class QueryController {
         public static final String BASE_URL = "api/v1/query";
         public static final String FETCH_ALL_FOR_USER = "/{id}";
-        public static final String FETCH_BY_ID = "/{id}";
         public static final String DELETE_BY_ID = "/{id}";
     }
 }

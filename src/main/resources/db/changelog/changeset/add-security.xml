@@ -29,5 +29,22 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <createTable tableName="token">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revoked" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints foreignKeyName="user_token_fk" referencedTableName="usr" referencedColumnNames="id"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

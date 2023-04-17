@@ -28,11 +28,6 @@ public class QueryController {
         return ResponseEntity.ok(queryService.findAllByUserEntityId(id));
     }
 
-    @GetMapping(ApiRouter.QueryController.FETCH_BY_ID)
-    public ResponseEntity<QueryDto> fetchById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(queryService.findById(id));
-    }
-
     @PostMapping
     public ResponseEntity<QueryDto> save(@RequestBody QueryDto queryDto) {
         return ResponseEntity.ok(queryService.save(queryDto));
