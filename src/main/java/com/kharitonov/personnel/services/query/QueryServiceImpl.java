@@ -31,10 +31,6 @@ public class QueryServiceImpl implements QueryService{
         return queryMapper.toIterableDto(allByForUserId);
     }
 
-    @Override
-    public QueryDto findById(Long id) {
-        return null;
-    }
 
     @Override
     public QueryDto save(QueryDto queryDto) {

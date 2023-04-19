@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
-                .logoutUrl(ApiRouter.AuthenticationController.LOGOUT)
+                .logoutUrl(ApiRouter.AuthenticationController.BASE_URL + ApiRouter.AuthenticationController.LOGOUT)
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler(((request, response, authentication) ->
                         SecurityContextHolder.clearContext()));

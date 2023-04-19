@@ -1,6 +1,6 @@
 package com.kharitonov.personnel.web.controllers.resume;
 
-import com.kharitonov.personnel.data.repositories.resume.ResumeRepository;
+import com.dropbox.core.DbxException;
 import com.kharitonov.personnel.dtos.resume.ResumeDto;
 import com.kharitonov.personnel.services.resume.ResumeService;
 import com.kharitonov.personnel.web.contracts.router.ApiRouter;
@@ -27,11 +27,17 @@ public class ResumeController {
        return ResponseEntity.ok(resumeService.findAllById(id));
    }
 
+   @GetMapping(ApiRouter.ResumeController.DOWNLOAD_BY_ID)
+   public ResponseEntity<String> fetchLinkById(@PathVariable("id") Long id) throws DbxException {
+       return ResponseEntity.ok(resumeService.getDownloadLinkFile(id));
+   }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResumeDto save(@RequestParam("file")MultipartFile multipartFile,
                           @RequestParam("candidate_id") Long id) {
        return resumeService.save(multipartFile, id);
     }
+
 
 }

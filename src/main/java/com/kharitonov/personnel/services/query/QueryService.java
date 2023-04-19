@@ -7,7 +7,6 @@ public interface QueryService {
 
     Iterable<QueryDto> findAll();
     Iterable<QueryDto> findAllByUserEntityId(Long id);
-    QueryDto findById(Long id);
     QueryDto save(QueryDto QueryDto);
     Long deleteById(Long id);
 }

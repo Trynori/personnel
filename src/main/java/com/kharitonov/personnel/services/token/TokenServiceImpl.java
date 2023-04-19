@@ -20,9 +20,6 @@ public class TokenServiceImpl implements TokenService{
     @Override
     public List<TokenEntity> findAllValidTokenByUserId(Long userId) {
         List<TokenEntity> allValidTokenByUserId = tokenRepository.findAllValidTokenByUserId(userId);
-        if(allValidTokenByUserId.isEmpty()) {
-            throw new NotFoundException("Valid token was not found by userId:" + userId);
-        }
         return allValidTokenByUserId;
     }
 

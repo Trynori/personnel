@@ -1,6 +1,5 @@
 package com.kharitonov.personnel.utils.filter;
 
-import com.kharitonov.personnel.data.models.token.TokenEntity;
 import com.kharitonov.personnel.services.jwt.JwtService;
 import com.kharitonov.personnel.services.token.TokenService;
 import jakarta.servlet.FilterChain;

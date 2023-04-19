@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ResumeServiceImpl implements ResumeService {
@@ -56,11 +59,21 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Iterable<ResumeDto> findAllById(Long id) {
-        List<ResumeEntity> allByCandidateEntityId = resumeRepository.findAllByCandidateEntity_Id(id);
-        if (allByCandidateEntityId.isEmpty()) {
+        List<ResumeEntity> allResumeByCandidateId = resumeRepository.findAllByCandidateEntity_Id(id);
+        if (allResumeByCandidateId.isEmpty()) {
             throw new NotFoundException("Resume was not found by id:" + id);
         }
-        return resumeMapper.toIterableDto(allByCandidateEntityId);
+        return resumeMapper.toIterableDto(allResumeByCandidateId);
     }
 
+    @Override
+    public String getDownloadLinkFile(Long id) throws DbxException {
+        ResumeEntity resumeEntity = resumeRepository.findById(id).orElse(new ResumeEntity());
+        if(resumeEntity.getId() == null) {
+            throw new NotFoundException("Resume was not found by id:" + id);
+        }
+        String link = dbxClient.files().getTemporaryLink(resumeEntity.getPathDropbox()).getLink();
+        return link;
+    }
 }
+
